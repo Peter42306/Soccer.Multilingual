@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Soccer.Multilingual.Resources
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,6 +13,19 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <div class="container-fluid">
+                    @Html.ActionLink(@Resource.Back, "Index", "Club", null, new { @class = "navbar-brand" })
+                    @Html.ActionLink(@Resource.CreateLink, "CreateClub", "Club", null, new { @class = "navbar-brand" })
+                    @using (Html.BeginForm("ChangeCulture", "Club"))
+                    {
+                        <select name="lang" class="form-control">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>                            
+                        </select>
+                        <input type="submit" name="submit" value="@Resource.ChooseLang" class="btn btn-default">
+                    }
+                </div>
+
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Soccer.Multilingual</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -20,10 +34,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Resource.Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">@Resource.Privacy</a>
                         </li>
                     </ul>
                 </div>

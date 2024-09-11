@@ -1,27 +1,32 @@
+using Microsoft.EntityFrameworkCore;
+using Soccer.Multilingual.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Получаем строку подключения из файла конфигурации
+string? connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// добавляем контекст ApplicationContext в качестве сервиса в приложение
+builder.Services.AddDbContext<ClubContext>(options => options.UseSqlServer(connection));
+
+// Все сессии работают поверх объекта IDistributedCache, и ASP.NET Core 
+// предоставляет встроенную реализацию IDistributedCache
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10); // Длительность сеанса (тайм-аут завершения сеанса)
+    options.Cookie.Name = "Session"; // Каждая сессия имеет свой идентификатор, который сохраняется в куках.
+
+});
+// Добавляем сервисы MVC
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
+app.UseStaticFiles(); // обрабатывает запросы к файлам в папке wwwroot
+app.UseSession();   // Добавляем middleware-компонент для работы с сессиями
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Club}/{action=Index}/{id?}");
 
 app.Run();
